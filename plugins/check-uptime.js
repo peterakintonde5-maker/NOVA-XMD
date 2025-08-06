@@ -1,133 +1,72 @@
 const { cmd } = require('../command');
-const { runtime } = require('../lib/functions');
-const config = require('../config');
+const os = require("os");
+const process = require("process");
+
+// Uptime formatter
+function fancyUptime(seconds) {
+    seconds = Number(seconds);
+    const d = Math.floor(seconds / (3600 * 24));
+    const h = Math.floor((seconds % (3600 * 24)) / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = Math.floor(seconds % 60);
+    return `${d ? d + 'd ' : ''}${h ? h + 'h ' : ''}${m ? m + 'm ' : ''}${s}s`.trim() || "0s";
+}
 
 cmd({
-    pattern: "uptime",
-    alias: ["runtime", "up"],
-    desc: "Show bot uptime with stylish formats",
+    pattern: "alive",
+    alias: ["av", "runtime", "uptime"],
+    desc: "Check uptime and system status",
     category: "main",
-    react: "⏱️",
+    react: "🟢",
     filename: __filename
 },
-async (conn, mek, m, { from, reply }) => {
+async (conn, mek, m, { from, reply, botNumber, pushname }) => {
     try {
-        const uptime = runtime(process.uptime());
-        const startTime = new Date(Date.now() - process.uptime() * 1000);
-        
-        // Style 1: Classic Box
-        const style1 = `╭───『 UPTIME 』───⳹
-│
-│ ⏱️ ${uptime}
-│
-│ 🚀 Started: ${startTime.toLocaleString()}
-│
-╰────────────────⳹
-${config.DESCRIPTION}`;
+        const platform = "Heroku Platform";
+        const release = os.release();
+        const cpuModel = os.cpus()[0].model;
+        const totalMem = (os.totalmem() / 1024 / 1024).toFixed(2);
+        const usedMem = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
+        const cpuCores = os.cpus().length;
+        const arch = os.arch();
+        const nodeVersion = process.version;
+        const botName = pushname || "BOVA-XMD BOT";
+        const owner = "nova-xmd";
 
-        // Style 2: Minimalist
-        const style2 = `•——[ UPTIME ]——•
-  │
-  ├─ ⏳ ${uptime}
-  ├─ 🕒 Since: ${startTime.toLocaleTimeString()}
-  │
-  •——[ ${config.BOT_NAME} ]——•`;
+        const status = `
+✨ NOVA XMD ALIVE 🚀
 
-        // Style 3: Fancy Borders
-        const style3 = `▄▀▄▀▄ BOT UPTIME ▄▀▄▀▄
+╔═══[ BOT STATUS ]═══╗
+┃ 🤖 Name     : ${botName}
+┃ 🆔 Bot ID   : @${botNumber.replace(/@.+/, "")}
+┃ 👑 Owner    : ${owner}
+┃ ⏳ Uptime   : ${fancyUptime(process.uptime())}
+┃ 🟢 Node.js  : ${nodeVersion}
+┃ 🧪 Version  : 1.0.0 BETA
+╚════════════════════╝
 
-  ♢ Running: ${uptime}
-  ♢ Since: ${startTime.toLocaleDateString()}
-  
-  ${config.DESCRIPTION}`;
+▶️ Stay tuned for more updates!
+        `;
 
-        // Style 4: Code Style
-        const style4 = `┌──────────────────────┐
-│  ⚡ UPTIME STATUS ⚡  │
-├──────────────────────┤
-│ • Time: ${uptime}
-│ • Started: ${startTime.toLocaleString()}
-│ • Version: 4.0.0
-└──────────────────────┘`;
-
-        // Style 5: Modern Blocks
-        const style5 = `▰▰▰▰▰ UPTIME ▰▰▰▰▰
-
-  ⏳ ${uptime}
-  🕰️ ${startTime.toLocaleString()}
-  
-  ${config.DESCRIPTION}`;
-
-        // Style 6: Retro Terminal
-        const style6 = `╔══════════════════════╗
-║   ${config.BOT_NAME} UPTIME    ║
-╠══════════════════════╣
-║ > RUNTIME: ${uptime}
-║ > SINCE: ${startTime.toLocaleString()}
-╚══════════════════════╝`;
-
-        // Style 7: Elegant
-        const style7 = `┌───────────────┐
-│  ⏱️  UPTIME  │
-└───────────────┘
-│
-│ ${uptime}
-│
-│ Since ${startTime.toLocaleDateString()}
-│
-┌───────────────┐
-│  ${config.BOT_NAME}  │
-└───────────────┘`;
-
-        // Style 8: Social Media Style
-        const style8 = `⏱️ *Uptime Report* ⏱️
-
-🟢 Online for: ${uptime}
-📅 Since: ${startTime.toLocaleString()}
-
-${config.DESCRIPTION}`;
-
-        // Style 9: Fancy List
-        const style9 = `╔♫═⏱️═♫══════════╗
-   ${config.BOT_NAME} UPTIME
-╚♫═⏱️═♫══════════╝
-
-•・゜゜・* ✧  *・゜゜・•
- ✧ ${uptime}
- ✧ Since ${startTime.toLocaleDateString()}
-•・゜゜・* ✧  *・゜゜・•`;
-
-        // Style 10: Professional
-        const style10 = `┏━━━━━━━━━━━━━━━━━━┓
-┃  UPTIME ANALYSIS  ┃
-┗━━━━━━━━━━━━━━━━━━┛
-
-◈ Duration: ${uptime}
-◈ Start Time: ${startTime.toLocaleString()}
-◈ Stability: 100%
-◈ Version:  4.0.0
-
-${config.DESCRIPTION}`;
-
-        const styles = [style1, style2, style3, style4, style5, style6, style7, style8, style9, style10];
-        const selectedStyle = styles[Math.floor(Math.random() * styles.length)];
-
-        await conn.sendMessage(from, { 
-            text: selectedStyle,
-            contextInfo: {
-                mentionedJid: [m.sender],
-                forwardingScore: 999,
-                isForwarded: true,
-                forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363382023564830@newsletter',
-                    newsletterName: config.OWNER_NAME || '𝙽𝙾𝚅𝙰-𝚇𝙼𝙳',
-                    serverMessageId: 143
-                }
+        const newsletterContext = {
+            mentionedJid: [m.sender],
+            forwardingScore: 999,
+            isForwarded: true,
+            forwardedNewsletterMessageInfo: {
+                newsletterJid: "120363382023564830@newsletter",
+                newsletterName: "𝙽𝙾𝚅𝙰-𝚇𝙼𝙳",
+                serverMessageId: 143
             }
+        };
+
+        await conn.sendMessage(from, {
+            image: { url: "https://files.catbox.moe/yu1vaw.jpg" },
+            caption: status,
+            contextInfo: newsletterContext
         }, { quoted: mek });
 
     } catch (e) {
-        console.error("Uptime Error:", e);
-        reply(`❌ Error: ${e.message}`);
+        console.error("Error in alive command:", e);
+        reply(`🚨 *An error occurred:* ${e.message}`);
     }
 });
