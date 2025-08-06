@@ -3,78 +3,85 @@ const FormData = require('form-data');
 const fs = require('fs');
 const os = require('os');
 const path = require("path");
-const { cmd, commands } = require("../command");
+const { cmd } = require("../command");
 
 cmd({
-  'pattern': "tourl",
-  'alias': ["imgtourl", "imgurl", "url", "geturl", "upload"],
-  'react': '🖇',
-  'desc': "Convert media to Catbox URL",
-  'category': "utility",
-  'use': ".tourl [reply to media]",
-  'filename': __filename
+  pattern: "tourl",
+  alias: ["imgtourl", "imgurl", "url", "geturl", "upload"],
+  react: '🖇',
+  desc: "Convert media to Catbox URL",
+  category: "utility",
+  use: ".tourl [reply to media]",
+  filename: __filename
 }, async (client, message, args, { reply }) => {
+  let tempFilePath;
   try {
-    // Check if quoted message exists and has media
     const quotedMsg = message.quoted ? message.quoted : message;
     const mimeType = (quotedMsg.msg || quotedMsg).mimetype || '';
-    
+
     if (!mimeType) {
-      throw "Please reply to an image, video, or audio file";
+      throw "❌ Please reply to an image, video, or audio file.";
     }
 
-    // Download the media
     const mediaBuffer = await quotedMsg.download();
-    const tempFilePath = path.join(os.tmpdir(), `catbox_upload_${Date.now()}`);
+    tempFilePath = path.join(os.tmpdir(), `catbox_upload_${Date.now()}`);
     fs.writeFileSync(tempFilePath, mediaBuffer);
 
-    // Get file extension based on mime type
     let extension = '';
     if (mimeType.includes('image/jpeg')) extension = '.jpg';
     else if (mimeType.includes('image/png')) extension = '.png';
+    else if (mimeType.includes('image/webp')) extension = '.webp';
+    else if (mimeType.includes('image/gif')) extension = '.gif';
     else if (mimeType.includes('video')) extension = '.mp4';
     else if (mimeType.includes('audio')) extension = '.mp3';
-    
-    const fileName = `file${extension}`;
+    if (!extension) extension = path.extname(tempFilePath) || '.bin';
 
-    // Prepare form data for Catbox
+    const fileName = `file${extension}`;
     const form = new FormData();
     form.append('fileToUpload', fs.createReadStream(tempFilePath), fileName);
     form.append('reqtype', 'fileupload');
 
-    // Upload to Catbox
     const response = await axios.post("https://catbox.moe/user/api.php", form, {
       headers: form.getHeaders()
     });
 
-    if (!response.data) {
-      throw "Error uploading to Catbox";
+    if (!response.data || !response.data.includes("https://")) {
+      throw "Upload failed. Catbox returned an unexpected response.";
     }
 
     const mediaUrl = response.data;
-    fs.unlinkSync(tempFilePath);
-
-    // Determine media type for response
     let mediaType = 'File';
     if (mimeType.includes('image')) mediaType = 'Image';
     else if (mimeType.includes('video')) mediaType = 'Video';
     else if (mimeType.includes('audio')) mediaType = 'Audio';
 
-    // Send response
-    await reply(
-      `*${mediaType} Uploaded Successfully*\n\n` +
-      `*Size:* ${formatBytes(mediaBuffer.length)}\n` +
-      `*URL:* ${mediaUrl}\n\n` +
-      `> © Uploaded by 𝙽𝙾𝚅𝙰-𝚇𝙼𝙳 🚀`
-    );
+    await client.sendMessage(message.chat, {
+      text:
+        "```[ FILE UPLOAD SUCCESS ]```\n" +
+        "```========================```" + "\n" +
+        `📁 TYPE   : ${mediaType}\n` +
+        `📦 SIZE   : ${formatBytes(mediaBuffer.length)}\n` +
+        `🌐 LINK   :\n${mediaUrl}\n` +
+        "```========================```\n" +
+        `> Uploaded by: NOVA XMD SYSTEM`,
+      contextInfo: {
+        forwardedNewsletterMessageInfo: {
+          newsletterJid: "120363382023564830@newsletter",
+          newsletterName: "𝘕𝘖𝘝𝘈 𝘟𝘔𝘋 🔥"
+        }
+      }
+    }, { quoted: message });
 
   } catch (error) {
     console.error(error);
-    await reply(`Error: ${error.message || error}`);
+    await reply(`❌ Error: ${error.message || error}`);
+  } finally {
+    if (tempFilePath && fs.existsSync(tempFilePath)) {
+      fs.unlinkSync(tempFilePath);
+    }
   }
 });
 
-// Helper function to format bytes
 function formatBytes(bytes) {
   if (bytes === 0) return '0 Bytes';
   const k = 1024;
