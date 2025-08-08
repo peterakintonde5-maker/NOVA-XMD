@@ -1,7 +1,7 @@
 {
   "name": "NOVA-XMD",
   "description": "Javascript WhatsApp bot made by novaxmd",
-  "logo": "https://files.catbox.moe/jsqqne.jpg",
+  "logo": "https://github.com/novaxmd/BMB-XMD-DATA/raw/refs/heads/main/image/heroku.jpg",
   "keywords": ["NOVA-XMD"],
   "success_url": "/",
   "stack": "container",
@@ -104,7 +104,7 @@
     "MENU_IMAGE_URL": {
       "description": "add url for mention reply and menu if want.",
       "required": false,
-      "value": "https://files.catbox.moe/jsqqne.jpg"
+      "value": "https://github.com/novaxmd/BMB-XMD-DATA/raw/refs/heads/main/image/heroku.jpg"
     },
     "DESCRIPTION": {
       "description": "add caption for menu and other",
