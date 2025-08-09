@@ -38,15 +38,15 @@ cmd({
     const imageBuffer = fs.readFileSync(imagePath);
 
     let dec = 
-`╔═══════════════════
+`╔═══════════════════╗
 ║    NOVA XMD BOT STATUS
-╠═══════════════════
-║ Mode     : ${config.MODE}
-║ Prefix   : ${config.PREFIX}
-║ Developer  : nova tech
-║ Version    : 1.0.0
-║Mode     : ${config.OWNER}
-╚═════════════════
+╚═════ ══════════════╝
+║📳 Mode     : ${config.MODE}
+║🔰 Prefix   : ${config.PREFIX}
+║👩‍💻 Developer  : nova tech
+║🖥️  Version    : 1.0.0
+║👑 Owner     : ${config.OWNER_NAME}
+╚═════════════════════╝
 
 ╔══════════════╗
 ║   TOOL LIST
