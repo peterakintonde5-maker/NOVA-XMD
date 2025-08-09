@@ -19,7 +19,7 @@ const quotedContact = {
 
 cmd({
   pattern: "screenshot",
-  react: "🌐",
+  react: "🔰",
   alias: ["ss", "ssweb"],
   desc: "Capture a full-page screenshot of a website.",
   category: "utility",
@@ -45,16 +45,29 @@ cmd({
 
     await sleep(1500);
 
+    const caption = `┏━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 🖼️ *Screenshot Generated*
+┣━━━━━━━━━━━━━━━━━━━━━━━
+┃ > Its nova open the link 
+┗━━━━━━━━━━━━━━━━━━━━━━━`;
+
     await conn.sendMessage(from, {
       image: { url: `https://image.thum.io/get/fullpage/${url}` },
-      caption: "- 🖼️ *Screenshot Generated*\n\n> Its nova say it beiby🤭🎭♥️🧎",
+      caption,
       contextInfo
     }, { quoted: quotedContact });
 
   } catch (error) {
     console.error("Screenshot Error:", error);
+
+    const captionError = `┏━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ ❌ *Failed to capture screenshot*
+┣━━━━━━━━━━━━━━━━━━━━━━━
+┃ ✦ Please try again later
+┗━━━━━━━━━━━━━━━━━━━━━━━`;
+
     await conn.sendMessage(from, {
-      text: "❌ Failed to capture screenshot\n✦ Please try again later",
+      text: captionError,
       contextInfo
     }, { quoted: quotedContact });
   }
