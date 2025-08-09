@@ -3,7 +3,7 @@ const { cmd, commands } = require('../command')
 const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, fetchJson} = require('../lib/functions')
 
 cmd({
-    pattern: "unlockgc",
+    pattern: "unlock",
     alias: ["unlock"],
     react: "🔓",
     desc: "Unlock the group (Allows new members to join).",
