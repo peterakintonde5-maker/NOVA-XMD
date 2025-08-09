@@ -18,7 +18,7 @@ const quotedContact = {
 };
 
 cmd({
-    pattern: "lockgc",
+    pattern: "lock",
     alias: ["lock"],
     react: "🔒",
     desc: "Lock the group (Prevents new members from joining).",
