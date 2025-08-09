@@ -16,7 +16,7 @@ const quotedContact = {
 };
 
 cmd({
-    pattern: "updategname",
+    pattern: "groupname",
     alias: ["upgname", "gname"],
     react: "📝",
     desc: "Change the group name.",
