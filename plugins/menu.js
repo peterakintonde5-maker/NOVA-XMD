@@ -3,7 +3,6 @@ const { cmd } = require('../command');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
-const { runtime } = require('../lib/functions');
 
 const quotedContact = {
   key: {
@@ -13,11 +12,11 @@ const quotedContact = {
   },
   message: {
     contactMessage: {
-      displayName: "NOVA-XMD VERIFIED ✅",
+      displayName: "NOVA XMD VERIFIED ✅",
       vcard: `BEGIN:VCARD
 VERSION:3.0
 FN:B.M.B VERIFIED ✅
-ORG:BMB-TECH BOT;
+ORG:BMB TECH BOT;
 TEL;type=CELL;type=VOICE;waid=255767862457:+255767862457
 END:VCARD`
     }
@@ -30,7 +29,7 @@ cmd({
   use: '.menu',
   desc: "menu the bot",
   category: "menu",
-  react: "🔰",
+  react: "🪀",
   filename: __filename
 }, async (conn, mek, m, { from, reply }) => {
   try {
@@ -39,115 +38,110 @@ cmd({
     const imageBuffer = fs.readFileSync(imagePath);
 
     let dec = 
-`┌─[ NOVA-XMD BOT STATUS ]
-│ Runtime: ${runtime(process.uptime())}
-│ Mode: ${config.MODE}
-│ Prefix: ${config.PREFIX}
-│ RAM Usage: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}GB / ${Math.round(os.totalmem() / 1024 / 1024)}GB
-│ Dev: B.M.B-TECH
-│ Version: 1.0.0
-└─────────────────────
+`╔════════════════════════╗
+║    NOVA XMD BOT STATUS
+╠════════════════════════╣
+║ Mode     : ${config.MODE}
+║ Prefix   : ${config.PREFIX}
+╚════════════════════════╝
+
+╔════════════════════╗
+║      SYSTEM INFO     ║
+╠════════════════════╣
+║ Developer  : nova tech
+║ Version    : 1.0.0
+╚════════════════════╝
 
 ╔══════════════╗
 ║   TOOL LIST   ║
 ╚══════════════╝
-■ gpt
-■ vv
-■ vv2
-■ bible
-■ channel
-■ unblock
-■ block
-■ uptime
-■ gitclone
-■ check
-■ ping
-■ pair
-■ owner
-■ getpp
-■ github
-■ listonline
-■ alive
-■ menu
-■ repo
-■ attp
-■ post
-■ restart
-■ send
-■ save
-■ sticker
-■ take
-
-─▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧─
-
-╭────────────────────────╮
-│      TOOL DOWNLOAD      │
-╰────────────────────────╯
-⇨ fb
-⇨ play
-⇨ apk
-⇨ video
-⇨ img
-⇨ tiktok
-⇨ fancy
-⇨ imgscan
-⇨ stabilityai
-⇨ fluxai
-⇨ iyrics
-⇨ movie
-⇨ screenshot
-⇨ rw
-⇨ toppt
-⇨ tomp3
-⇨ short
-⇨ convert
-⇨ trt
-⇨ yts
-⇨ url
-
-──────────────────────────
-
+⚙️ ■ gpt
+⚙️ ■ vv
+⚙️ ■ vv2
+⚙️ ■ bible
+⚙️ ■ channel
+⚙️ ■ unblock
+⚙️ ■ block
+⚙️ ■ uptime
+⚙️ ■ gitclone
+⚙️ ■ check
+⚙️ ■ ping
+⚙️ ■ pair
+⚙️ ■ owner
+⚙️ ■ getpp
+⚙️ ■ github
+⚙️ ■ listonline
+⚙️ ■ alive
+⚙️ ■ menu
+⚙️ ■ repo
+⚙️ ■ attp
+⚙️ ■ post
+⚙️ ■ restart
+⚙️ ■ send
+⚙️ ■ save
+⚙️ ■ sticker
+⚙️ ■ take
+─▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧▧─
+╭──────────────────────╮
+│      TOOL DOWNLOAD  
+╰──────────────────────╯
+⚙️ ■ fb
+⚙️ ■ play
+⚙️ ■ apk
+⚙️ ■ video
+⚙️ ■ img
+⚙️ ■ tiktok
+⚙️ ■ fancy
+⚙️ ■ imgscan
+⚙️ ■ stabilityai
+⚙️ ■ fluxai
+⚙️ ■ iyrics
+⚙️ ■ movie
+⚙️ ■ screenshot
+⚙️ ■ rw
+⚙️ ■ toppt
+⚙️ ■ tomp3
+⚙️ ■ short
+⚙️ ■ convert
+⚙️ ■ trt
+⚙️ ■ yts
+⚙️ ■ url
 ▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂
-
 ╔════════════════════╗
 ║      TOOL GROUP     ║
 ╚════════════════════╝
-* gdesc
-* add
-* kick
-* hidetag
-* tagall
-* antilink
-* welcome
-* gname
-* ginfo
-* join
-* link
-* vcfl
-* left
-* mute
-* out
-* unmutel
-* newgc
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+⚙️ ■ gdesc
+⚙️ ■ add
+⚙️ ■ kick
+⚙️ ■ hidetag
+⚙️ ■ tagall
+⚙️ ■ antilink
+⚙️ ■ welcome
+⚙️ ■ gname
+⚙️ ■ ginfo
+⚙️ ■ join
+⚙️ ■ link
+⚙️ ■ vcfl
+⚙️ ■ left
+⚙️ ■ mute
+⚙️ ■ out
+⚙️ ■ unmutel
+⚙️ ■ newgc
 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-
 ╭╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╮
 │    TOOL SETTINGS      │
 ╰╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╯
-- mode
-- auto-typing
-- auto-react
-- deletelink
-- antilink
-- antical
-- blocklist
-
-──────────────────────────
-
-> powered by NOVA-XMD
+⚙️ ■ mode
+⚙️ ■ auto
+⚙️ ■typing
+⚙️ ■ auto
+⚙️ ■ react
+⚙️ ■ deletelink
+⚙️ ■ antilink
+⚙️ ■ antical
+⚙️ ■ blocklist
+──────────────────────
+> powered by NOVA XMD
 `;
 
     await conn.sendMessage(
@@ -161,7 +155,7 @@ cmd({
           isForwarded: true,
           forwardedNewsletterMessageInfo: {
             newsletterJid: '120363382023564830@newsletter',
-            newsletterName: '𝗡𝗢𝗩𝗔-𝗫𝗠𝗗',
+            newsletterName: '𝗡𝗢𝗩𝗔 𝗫𝗠𝗗',
             serverMessageId: 143
           }
         }
