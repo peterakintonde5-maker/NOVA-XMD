@@ -23,7 +23,7 @@ const quotedContact = {
 
 cmd({
   pattern: "invite",
-  alias: ["glink", "grouplink"],
+  alias: ["glink", "link"],
   desc: "Get group invite link.",
   category: "group",
   filename: __filename,
