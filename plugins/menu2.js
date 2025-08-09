@@ -37,16 +37,14 @@ cmd({
     const imagePath = path.join(__dirname, '..', 'plugins', `menu${randomIndex}.jpg`);
     const imageBuffer = fs.readFileSync(imagePath);
 
-    let dec = 
-`╔═══════════════════╗
-║    NOVA XMD BOT STATUS
-╚═════ ══════════════╝
-║📳 Mode     : ${config.MODE}
-║🔰 Prefix   : ${config.PREFIX}
-║👩‍💻 Developer  : nova tech
-║🖥️  Version    : 1.0.0
-║👑 Owner     : ${config.OWNER_NAME}
-╚═════════════════════╝
+    let dec =  `
+═══════════════════════
+> 🌟  *𝗡𝗢𝗩𝗔-𝗫𝗠𝗗 𝗕𝗢𝗧* 🌟
+> *Version*: 8.1.0 |
+> *DEVELOPED BY NOVA TECH🪆*
+> *ULTRASONIC POWER AND SPEED ⚡
+═══════════════════════
+
 
 ╔══════════════╗
 ║   TOOL LIST
