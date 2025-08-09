@@ -1,92 +1,163 @@
-const config = require('../config')
-const moment = require('moment');
-const { cmd, commands } = require('../command');
-const os = require("os")
-const { runtime } = require('../lib/functions')
-const axios = require('axios')
+const config = require('../config');
+const { cmd } = require('../command');
+const fs = require('fs');
+const path = require('path');
+const os = require('os');
+
+const quotedContact = {
+  key: {
+    fromMe: false,
+    participant: `0@s.whatsapp.net`,
+    remoteJid: "status@broadcast"
+  },
+  message: {
+    contactMessage: {
+      displayName: "NOVA XMD VERIFIED ✅",
+      vcard: `BEGIN:VCARD
+VERSION:3.0
+FN:B.M.B VERIFIED ✅
+ORG:BMB TECH BOT;
+TEL;type=CELL;type=VOICE;waid=255767862457:+255767862457
+END:VCARD`
+    }
+  }
+};
 
 cmd({
-    pattern: "command",
-    alias: ["allmenu", "novatech"],
-    use: '.menu',
-    desc: "Show all bot commands",
-    category: "menu",
-    react: "❄️",
-    filename: __filename
-},
-async (conn, mek, m, {
-    from, sender, pushname, reply
-}) => {
-    try {
-        function formatUptime(seconds) {
-            const h = Math.floor(seconds / 3600);
-            const m = Math.floor((seconds % 3600) / 60);
-            const s = Math.floor(seconds % 60);
-            return `${h}h ${m}m ${s}s`;
+  pattern: "menu1",
+  alias: ["allmenu", "command"],
+  use: '.menu',
+  desc: "menu the bot",
+  category: "menu",
+  react: "🪀",
+  filename: __filename
+}, async (conn, mek, m, { from, reply }) => {
+  try {
+    const randomIndex = Math.floor(Math.random() * 10) + 1;
+    const imagePath = path.join(__dirname, '..', 'plugins', `menu${randomIndex}.jpg`);
+    const imageBuffer = fs.readFileSync(imagePath);
+
+    let dec = 
+`╔═══════════════════
+║    NOVA XMD BOT STATUS
+╠═══════════════════
+║ Mode     : ${config.MODE}
+║ Prefix   : ${config.PREFIX}
+║ Developer  : nova tech
+║ Version    : 1.0.0
+║Mode     : ${config.OWNER}
+╚═════════════════
+
+╔══════════════╗
+║   TOOL LIST
+╚══════════════╝
+⚙️ ■ gpt
+⚙️ ■ vv
+⚙️ ■ vv2
+⚙️ ■ bible
+⚙️ ■ channel
+⚙️ ■ unblock
+⚙️ ■ block
+⚙️ ■ uptime
+⚙️ ■ gitclone
+⚙️ ■ check
+⚙️ ■ ping
+⚙️ ■ pair
+⚙️ ■ owner
+⚙️ ■ getpp
+⚙️ ■ github
+⚙️ ■ listonline
+⚙️ ■ alive
+⚙️ ■ menu
+⚙️ ■ repo
+⚙️ ■ attp
+⚙️ ■ post
+⚙️ ■ restart
+⚙️ ■ send
+⚙️ ■ save
+⚙️ ■ sticker
+⚙️ ■ take
+╭────────────────╮
+│  TOOL DOWNLOAD  
+╰────────────────╯
+⚙️ ■ fb
+⚙️ ■ play
+⚙️ ■ apk
+⚙️ ■ video
+⚙️ ■ img
+⚙️ ■ tiktok
+⚙️ ■ fancy
+⚙️ ■ imgscan
+⚙️ ■ stabilityai
+⚙️ ■ fluxai
+⚙️ ■ iyrics
+⚙️ ■ movie
+⚙️ ■ screenshot
+⚙️ ■ rw
+⚙️ ■ toppt
+⚙️ ■ tomp3
+⚙️ ■ short
+⚙️ ■ convert
+⚙️ ■ trt
+⚙️ ■ yts
+⚙️ ■ url
+╔══════════════╗
+║   TOOL GROUP 
+╚══════════════╝
+⚙️ ■ gdesc
+⚙️ ■ add
+⚙️ ■ kick
+⚙️ ■ hidetag
+⚙️ ■ tagall
+⚙️ ■ antilink
+⚙️ ■ welcome
+⚙️ ■ gname
+⚙️ ■ ginfo
+⚙️ ■ join
+⚙️ ■ link
+⚙️ ■ vcfl
+⚙️ ■ left
+⚙️ ■ mute
+⚙️ ■ out
+⚙️ ■ unmutel
+⚙️ ■ newgc
+╭╴╴╴╴╴╴╴╴╴╴╴╴╴╴╮
+│ TOOL SETTINGS
+╰╴╴╴╴╴╴╴╴╴╴╴╴╴╴╯
+⚙️ ■ mode
+⚙️ ■ auto
+⚙️ ■typing
+⚙️ ■ auto
+⚙️ ■ react
+⚙️ ■ deletelink
+⚙️ ■ antilink
+⚙️ ■ antical
+⚙️ ■ blocklist
+─────────────────
+> powered by nova tech
+`;
+
+    await conn.sendMessage(
+      from,
+      {
+        image: imageBuffer,
+        caption: dec,
+        contextInfo: {
+          mentionedJid: [m.sender],
+          forwardingScore: 999,
+          isForwarded: true,
+          forwardedNewsletterMessageInfo: {
+            newsletterJid: '120363382023564830@newsletter',
+            newsletterName: '𝗡𝗢𝗩𝗔 𝗫𝗠𝗗',
+            serverMessageId: 143
+          }
         }
+      },
+      { quoted: quotedContact }
+    );
 
-        const uptime = formatUptime(process.uptime());
-        const date = new Date().toLocaleDateString('en-GB', {
-            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-        });
-        const time = moment().format('HH:mm:ss');
-        const day = moment().format('dddd');
-
-        const info = `
-╭─❒ *『 𝗡𝗢𝗩𝗔-𝗫𝗠𝗗 』*
-│▢ *User:* ${pushname}
-│▢ *Prefix:* ${config.PREFIX}
-│▢ *Time:* ${time}
-│▢ *Day:* ${day}
-│▢ *Date:* ${date}
-│▢ *Uptime:* ${uptime}
-│▢ *Version:* 1.0.0-beta
-╰─────────────⧉`;
-
-        let category = {};
-        for (let cmd of commands) {
-            if (!cmd.category) continue;
-            if (!category[cmd.category]) category[cmd.category] = [];
-            category[cmd.category].push(cmd);
-        }
-
-        const keys = Object.keys(category).sort();
-        let print = info + '\n' + String.fromCharCode(8206).repeat(4001);
-
-        for (let k of keys) {
-            print += `\n\n╭━──〔 *${k.toUpperCase()}* 〕──`;
-            const cmds = category[k].sort((a, b) => a.pattern.localeCompare(b.pattern));
-            cmds.forEach((cmd) => {
-                const usage = cmd.pattern.split('|')[0];
-                print += `\n┃ ⬡ ${usage}`;
-            });
-            print += `\n╰──────────────❒`;
-        }
-
-        const footer = "\n\n> *© ᴘᴏᴡᴇʀᴇᴅ ʙʏ 𝙽𝙾𝚅𝙰-𝚇𝙼𝙳*";
-        const fullText = print + footer;
-
-        await conn.sendMessage(
-            from,
-            {
-                image: { url: `https://github.com/novaxmd/BMB-XMD-DATA/raw/refs/heads/main/image/heroku.jpg` },
-                caption: fullText,
-                contextInfo: {
-                    mentionedJid: [m.sender],
-                    forwardingScore: 999,
-                    isForwarded: true,
-                    forwardedNewsletterMessageInfo: {
-                        newsletterJid: '120363382023564830@newsletter',
-                        newsletterName: "𝗡𝗢𝗩𝗔-𝗫𝗠𝗗",
-                        serverMessageId: 143
-                    }
-                }
-            },
-            { quoted: mek }
-        );
-
-    } catch (e) {
-        console.error(e);
-        reply(`❌ Erreur dans la commande menu : ${e.message}`);
-    }
+  } catch (e) {
+    console.log(e);
+    reply(`${e}`);
+  }
 });
