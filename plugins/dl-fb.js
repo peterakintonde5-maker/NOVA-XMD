@@ -1,5 +1,5 @@
 const { cmd } = require("../command");
-const getFBInfo = require("@xaviabot/fb-downloader"); // API mpya
+const getFBInfo = require("@xaviabot/fb-downloader"); // NEW API
 
 cmd({
   pattern: "fb",
