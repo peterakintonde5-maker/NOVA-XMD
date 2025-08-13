@@ -1,5 +1,5 @@
-const axios = require("axios");
 const { cmd } = require("../command");
+const getFBInfo = require("@xaviabot/fb-downloader"); // API mpya
 
 cmd({
   pattern: "fb",
@@ -17,32 +17,25 @@ cmd({
       react: { text: "⏳", key: m.key }
     });
 
-    // Tumia API yako ya Vercel
-    const { data } = await axios.get(`https://nova-downloadbmb.vercel.app/api/fb?url=${encodeURIComponent(q)}`);
+    const fbData = await getFBInfo(q);
 
-    if (!data || !data.videoUrl) {
+    if (!fbData || (!fbData.sd && !fbData.hd)) {
       return reply("⚠️ *Failed to fetch Facebook video. Please try another link.*");
     }
 
-    const caption = `📹 *Facebook Video*\n🎬 *Title:* ${data.title || 'No Title'}\n\n🔗 *Powered by NOVA-XMD ✅*`;
+    // Andika menu ya buttons kulingana na availability
+    const buttons = [];
+    if (fbData.sd) buttons.push({ buttonId: 'sd', buttonText: { displayText: 'SD Quality' }, type: 1 });
+    if (fbData.hd) buttons.push({ buttonId: 'hd', buttonText: { displayText: 'HD Quality' }, type: 1 });
 
-    await conn.sendMessage(from, {
-      video: { url: data.videoUrl },
-      mimetype: "video/mp4",
-      caption: caption,
-      contextInfo: {
-        mentionedJid: [m.sender],
-        forwardingScore: 999,
-        isForwarded: true,
-        forwardedNewsletterMessageInfo: {
-          newsletterJid: "120363382023564830@newsletter",
-          newsletterName: "𝗡𝗢𝗩𝗔-𝗫𝗠𝗗",
-          serverMessageId: 144
-        }
-      }
-    }, { quoted: m });
+    const buttonMessage = {
+      image: { url: fbData.thumbnail },
+      caption: `📹 *Facebook Video*\n🎬 *Title:* ${fbData.title || 'No Title'}\n\n💠 *Select quality to download:*`,
+      buttons: buttons,
+      headerType: 4
+    };
 
-    await conn.sendMessage(from, { react: { text: "✅", key: m.key } });
+    await conn.sendMessage(from, buttonMessage, { quoted: m });
 
   } catch (err) {
     console.error("Facebook Downloader Error:", err);
