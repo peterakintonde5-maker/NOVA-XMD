@@ -56,11 +56,9 @@ async (conn, mek, m, { from, participants, reply, isGroup, senderNumber, groupAd
 │
 ╰──⊱ Mentioning All ⊰──⬣\n`;
 
-    // Get names dynamically for each participant
     for (const mem of participants) {
       if (!mem.id) continue;
-      const displayName = await conn.getName(mem.id); // Hii ndio inaonyesha jina ulilohifadhi
-      teks += `${randomEmoji} ${displayName} @${mem.id.split('@')[0]}\n`;
+      teks += `${randomEmoji} @${mem.id.split('@')[0]}\n`;
     }
 
     teks += `\n╰─⧈ 𝗡𝗢𝗩𝗔 ┃ 𝗫𝗠𝗗 ⧈─⬣`;
@@ -84,3 +82,4 @@ async (conn, mek, m, { from, participants, reply, isGroup, senderNumber, groupAd
     reply(`❌ *Error Occurred !!*\n\n${e.message || e}`);
   }
 });
+      
