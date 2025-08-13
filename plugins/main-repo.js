@@ -1,12 +1,10 @@
-const more = String.fromCharCode(8206);
-const readMore = more.repeat(4001);
 const fetch = require('node-fetch');
-const config = require('../config');
-const { cmd } = require('../command');
 const fs = require('fs');
 const path = require('path');
+const config = require('../config');
+const { cmd } = require('../command');
 
-// Contact message for verified context
+// Verified contact
 const quotedContact = {
   key: {
     fromMe: false,
@@ -22,68 +20,61 @@ const quotedContact = {
 };
 
 cmd({
-    pattern: "repo",
-    alias: ["sc", "script"],
-    desc: "Fetch information about a GitHub repository.",
-    react: "📋",
-    category: "info",
-    filename: __filename,
+  pattern: "repo",
+  alias: ["sc", "script", "info"],
+  desc: "Fetch GitHub repository information",
+  react: "🎗️",
+  category: "info",
+  filename: __filename,
 },
 async (conn, mek, m, { from, reply }) => {
-    const githubRepoURL = 'https://github.com/novaxmd/NOVA-XMD';
+  const githubRepoURL = 'https://github.com/novaxmd/NOVA-XMD';
 
-    try {
-        // Extract username and repo name from the URL
-        const [, username, repoName] = githubRepoURL.match(/github\.com\/([^/]+)\/([^/]+)/);
+  try {
+    const [, username, repoName] = githubRepoURL.match(/github\.com\/([^/]+)\/([^/]+)/);
+    const response = await fetch(`https://api.github.com/repos/${username}/${repoName}`);
+    if (!response.ok) throw new Error(`GitHub API error: ${response.status}`);
+    const repoData = await response.json();
 
-        // Fetch repository details using GitHub API
-        const response = await fetch(`https://api.github.com/repos/${username}/${repoName}`);
-        if (!response.ok) throw new Error(`GitHub API request failed with status ${response.status}`);
+    const style1 = `
+╭━━━「 ${config.BOT_NAME} REPO 」━━━➤
+│ 📦 Name: ${repoData.name}
+│ 👤 Owner: ${repoData.owner.login}
+│ ⭐ Stars: ${repoData.stargazers_count}
+│ 🍴 Forks: ${repoData.forks_count}
+│ 🌐 URL: ${repoData.html_url}
+╰━━━━━━━━━━━━━━━━━━━━━━━➤
+🔗 ${config.DESCRIPTION}`;
 
-        const repoData = await response.json();
+    const styles = [style1];
+    const selectedStyle = styles[Math.floor(Math.random() * styles.length)];
 
-        // Random image from /plugis folder
-        const scsFolder = path.join(__dirname, "../plugis");
-        const images = fs.readdirSync(scsFolder).filter(f => /^menu\d+\.(jpg|png)$/i.test(f));
-        if (images.length === 0) throw new Error("No images found in /plugis folder");
-        const randomImage = images[Math.floor(Math.random() * images.length)];
-        const randomImagePath = path.join(scsFolder, randomImage);
+    const scsFolder = path.join(__dirname, "../plugins");
+    const images = fs.readdirSync(scsFolder).filter(f => /^menu\d+\.jpg$/i.test(f));
+    const randomImage = images.length > 0
+      ? fs.readFileSync(path.join(scsFolder, images[Math.floor(Math.random() * images.length)]))
+      : null;
 
-        // Format repository info
-        const formattedInfo = `*𝐇𝐞𝐥𝐥𝐨 𝐭𝐡𝐞𝐫𝐞👋*,
-This is *NOVA-XMD*, Simple whatsapp bot built by Nova xmd ʙᴏᴛs. This bot was made to make the use of WhatsApp easier and fun.
+    const messageOptions = {
+      image: randomImage || { url: "https://i.ibb.co/KhYC4FY/1221bc0bdd2354b42b293317ff2adbcf-icon.png" },
+      caption: selectedStyle.trim(),
+      contextInfo: {
+        mentionedJid: [m.sender],
+        forwardingScore: 999,
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+          newsletterJid: '120363382023564830@newsletter',
+          newsletterName: config.OWNER_NAME || '𝗡𝗢𝗩𝗔-𝗫𝗠𝗗',
+          serverMessageId: 143
+        }
+      }
+    };
 
-> ᴅᴏɴ'ᴛ ғᴏʀɢᴇᴛ ᴛᴏ sᴛᴀʀ & ғᴏʀᴋ ᴛʜᴇ ʀᴇᴘᴏ🌟🍴
+    await conn.sendMessage(from, messageOptions, { quoted: quotedContact });
 
-ʀᴇᴘᴏ ʟɪɴᴋ: https://github.com/novaxmd
-
-💡 *ɴᴀᴍᴇ:* ${repoData.name}
-⭐ *ᴛᴏᴛᴀʟ sᴛᴀʀs:* ${repoData.stargazers_count}
-🍴 *ᴛᴏᴛᴀʟ ғᴏʀᴋs:* ${repoData.forks_count}
-👀 *ᴡᴀᴛᴄʜᴇʀs:* 1
-👤 *ᴏᴡɴᴇʀ:* ${repoData.owner.login}
-
-> *© Pᴏᴡᴇʀᴇᴅ Bʏ nova xmd bot.♡*
-`;
-
-        // Send random local image, replying with contact card
-        await conn.sendMessage(from, {
-            image: { url: randomImagePath },
-            caption: formattedInfo,
-            contextInfo: {
-                mentionedJid: [m.sender],
-                forwardingScore: 999,
-                isForwarded: true,
-                forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363382023564830@newsletter',
-                    newsletterName: 'nova tech.',
-                    serverMessageId: 143
-                }
-            }
-        }, { quoted: quotedContact });
-
-    } catch (error) {
-        console.error("Error in repo command:", error);
-        reply("Sorry, something went wrong while fetching the repository information. Please try again later.");
-    }
+  } catch (error) {
+    console.error("Repo command error:", error);
+    reply(`❌ Error: ${error.message}`);
+  }
 });
+  
