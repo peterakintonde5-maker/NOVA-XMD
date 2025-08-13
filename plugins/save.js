@@ -2,7 +2,7 @@ const { cmd } = require("../command");
 
 cmd({
   pattern: "save",
-  alias: ["dm", "save1"],
+  alias: ["❤️", "🥰🥰"],
   react: '🌲',
   desc: "Forwards quoted message to your DM",
   category: "utility",
