@@ -117,7 +117,7 @@ cmd({
 ⚙️ ■ left
 ⚙️ ■ mute
 ⚙️ ■ out
-⚙️ ■ unmutel
+⚙️ ■ unmute
 ⚙️ ■ newgc
 ╭╴╴╴╴╴╴╴╴╴╴╴╴╴╴╮
 │ TOOL SETTINGS
