@@ -36,6 +36,7 @@ async (conn, mek, m, { from, reply }) => {
     if (!response.ok) throw new Error(`GitHub API error: ${response.status}`);
     const repoData = await response.json();
 
+    // Style pekee iliyobaki
     const style1 = `
 ╭━━━「 ${config.BOT_NAME} REPO 」━━━➤
 │ 📦 Name: ${repoData.name}
@@ -46,9 +47,6 @@ async (conn, mek, m, { from, reply }) => {
 ╰━━━━━━━━━━━━━━━━━━━━━━━➤
 🔗 ${config.DESCRIPTION}`;
 
-    const styles = [style1];
-    const selectedStyle = styles[Math.floor(Math.random() * styles.length)];
-
     const scsFolder = path.join(__dirname, "../plugins");
     const images = fs.readdirSync(scsFolder).filter(f => /^menu\d+\.jpg$/i.test(f));
     const randomImage = images.length > 0
@@ -57,7 +55,7 @@ async (conn, mek, m, { from, reply }) => {
 
     const messageOptions = {
       image: randomImage || { url: "https://i.ibb.co/KhYC4FY/1221bc0bdd2354b42b293317ff2adbcf-icon.png" },
-      caption: selectedStyle.trim(),
+      caption: style1.trim(),
       contextInfo: {
         mentionedJid: [m.sender],
         forwardingScore: 999,
@@ -77,4 +75,3 @@ async (conn, mek, m, { from, reply }) => {
     reply(`❌ Error: ${error.message}`);
   }
 });
-  
